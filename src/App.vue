@@ -1,25 +1,31 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 in CodeSandbox!" />
+  <Card />
 </template>
 
 <script>
-import HelloWorldVue from "./components/HelloWorld.vue";
+import Card from "./components/Card.vue";
 export default {
   name: "App",
   components: {
-    HelloWorld: HelloWorldVue,
+    Card: Card,
   },
 };
 </script>
 
 <style>
+body {
+  margin: 0;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-family: Mulish;
+  font-style: normal;
+  padding: 0;
+  background: #ADACFC;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
