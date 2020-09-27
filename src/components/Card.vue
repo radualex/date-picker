@@ -4,7 +4,6 @@
       <span class="dates">Sep. 12, 2020 - Sep. 19, 2020 </span>
       <i class="material-icons-outlined">view_agenda</i>
     </div>
-    <div class="list"></div>
   </div>
 </template>
 
