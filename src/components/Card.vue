@@ -4,13 +4,19 @@
       <span class="dates">Sep. 12, 2020 - Sep. 19, 2020 </span>
       <i class="material-icons-outlined">view_agenda</i>
     </div>
+    <DatePicker />
   </div>
 </template>
 
 <script>
+import DatePicker from "./DatePicker";
+
 export default {
   name: "Card",
   props: {},
+  components: {
+    DatePicker,
+  },
 };
 </script>
 
