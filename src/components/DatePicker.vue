@@ -22,95 +22,19 @@
 </template>
 
 <script>
-import moment from "moment";
+import {getDates} from "../utils/helpers";
 
 export default {
   name: "DatePicker",
   props: {},
   data() {
     return {
-      gridSizePlusOne: 43,
+      gridSize: 42,
       daysAbrvMap: ["S", "M", "T", "W", "T", "F", "S"],
     };
   },
-  methods: {
-    getDates(month, year) {
-      let daysOfCurrentMonth = this.getDaysOfMonth(month, year);
-      const firstDay = daysOfCurrentMonth[0].momentDate;
-      let currentMonthAndPreviousDaysArray = this.getDaysBefore(
-        firstDay
-      ).concat(daysOfCurrentMonth);
-      const lastDay =
-        currentMonthAndPreviousDaysArray[
-          currentMonthAndPreviousDaysArray.length - 1
-        ].momentDate;
-      const restOfDaysAfter =
-        this.gridSizePlusOne - currentMonthAndPreviousDaysArray.length;
-      let finalArr = currentMonthAndPreviousDaysArray.concat(
-        this.getDaysAfterFrom(lastDay, restOfDaysAfter)
-      );
-      console.log(finalArr);
-    },
-    getDaysOfMonth(month, year) {
-      var ar = [];
-      var start = moment(`${year}-${month}`);
-      for (
-        var end = moment(start).add(1, "month");
-        start.isBefore(end);
-        start.add(1, "day")
-      ) {
-        // TODO: extract model
-        ar.push({
-          day: start.date(),
-          dayOfWeek: start.day(),
-          month: start.month() + 1,
-          year: start.year(),
-          momentDate: moment(start),
-        });
-      }
-      return ar;
-    },
-    getDaysBefore(momentDate) {
-      var ar = [];
-      const currentDayOfWeek = momentDate.day();
-      if (currentDayOfWeek !== 0) {
-        for (
-          var start = moment(momentDate).subtract(currentDayOfWeek, "days");
-          start.isBefore(momentDate);
-          start.add(1, "day")
-        ) {
-          ar.push({
-            day: start.date(),
-            dayOfWeek: start.day(),
-            month: start.month() + 1,
-            year: start.year(),
-            momentDate: moment(start),
-          });
-        }
-      }
-      return ar;
-    },
-    getDaysAfterFrom(momentDate, howMany) {
-      var ar = [];
-      var start = moment(momentDate).add(1, "day");
-      for (
-        var end = moment(momentDate).add(howMany, "days");
-        start.isBefore(end);
-        start.add(1, "day")
-      ) {
-        ar.push({
-          day: start.date(),
-          dayOfWeek: start.day(),
-          month: start.month() + 1,
-          year: start.year(),
-          momentDate: moment(start),
-        });
-      }
-      return ar;
-    },
-  },
   mounted: function () {
-    this.getDates(9, 2020);
+    getDates(10, 2020, this.gridSize);
   },
 };
 </script>
