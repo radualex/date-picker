@@ -2,39 +2,50 @@
   <div class="container-dp">
     <div class="dp-header">
       <i class="material-icons-outlined">arrow_back_ios</i>
-      <span class="dp-month">September</span>
+      <span class="dp-month">{{ currentDate.format("MMMM") }}</span>
       <i class="material-icons-outlined">arrow_forward_ios</i>
     </div>
     <hr class="dp-separator" />
-    <div class="dp-body">
-      <div class="dp-body-header">
-        <div
-          v-for="(dayAbrv, index) in daysAbrvMap"
-          :key="`dayAbrv - ${index}`"
-          class="dp-day-abrv"
+    <div class="dp-body" v-if="dates.length !== 0">
+      <div v-for="col in columns" :key="`dp-col-${col}`" class="dp-col">
+        <span class="dp-day-abrv">{{ daysAbrvMap[col - 1] }}</span>
+        <span
+          v-for="(date, index) in filteredDatesByDayOfWeek(col - 1)"
+          :key="`dp-date-item-${index}`"
+          >{{ date.day }}</span
         >
-          {{ dayAbrv }}
-        </div>
       </div>
-      <div class="dp-body-body"></div>
     </div>
   </div>
 </template>
 
 <script>
-import {getDates} from "../utils/helpers";
+import moment from "moment";
+import { getDates } from "../utils/helpers";
 
 export default {
   name: "DatePicker",
   props: {},
   data() {
     return {
-      gridSize: 42,
+      columns: 7,
+      rows: 6,
       daysAbrvMap: ["S", "M", "T", "W", "T", "F", "S"],
+      currentDate: moment(),
+      dates: [],
     };
   },
+  methods: {
+    filteredDatesByDayOfWeek(day) {
+      return this.dates.filter((date) => date.dayOfWeek === day);
+    },
+  },
   mounted: function () {
-    getDates(10, 2020, this.gridSize);
+    this.dates = getDates(
+      this.currentDate.month() + 1,
+      this.currentDate.year(),
+      this.columns * this.rows
+    );
   },
 };
 </script>
@@ -65,6 +76,7 @@ export default {
   line-height: 20px;
 
   text-align: center;
+  user-select: none;
 
   color: #151229;
 }
@@ -95,19 +107,37 @@ export default {
 }
 
 .container-dp .dp-body {
-  margin: 25px 0 0 0;
+  margin: 25px 0 0 5px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.container-dp .dp-body .dp-body-header {
+/* .container-dp .dp-body .dp-body-header {
   display: flex;
   gap: 43px;
+  justify-content: space-between;
   margin: 0 0 0 5px;
-}
-.container-dp .dp-body .dp-body-header .dp-day-abrv {
+} */
+.container-dp .dp-body .dp-day-abrv {
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
 
   color: #151229;
 }
+
+.container-dp .dp-body .dp-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+/* .container-dp .dp-body .dp-body-calendar .dp-body-col {
+  display: flex;
+  align-items: center;
+  margin: 25px 0 0 5px;
+  justify-content: space-between;
+  gap: 43px;
+} */
 </style>
