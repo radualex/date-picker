@@ -12,6 +12,12 @@
         <span
           v-for="(date, index) in filteredDatesByDayOfWeek(col - 1)"
           :key="`dp-date-item-${index}`"
+          v-bind:class="[
+            date.month === currentDate.month()
+              ? 'dp-day-before dp-day-offset-before'
+              : 'dp-day',
+            date.month === currentDate.month() + 2 ? 'dp-day-offset-after' : '',
+          ]"
           >{{ date.day }}</span
         >
       </div>
@@ -107,37 +113,61 @@ export default {
 }
 
 .container-dp .dp-body {
-  margin: 25px 0 0 5px;
+  margin: 25px 0 0 0px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-/* .container-dp .dp-body .dp-body-header {
-  display: flex;
-  gap: 43px;
-  justify-content: space-between;
-  margin: 0 0 0 5px;
-} */
 .container-dp .dp-body .dp-day-abrv {
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
+  text-align: center;
 
   color: #151229;
+  user-select: none;
+  margin-bottom: 12.5px;
 }
 
 .container-dp .dp-body .dp-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 25px;
 }
 
-/* .container-dp .dp-body .dp-body-calendar .dp-body-col {
-  display: flex;
-  align-items: center;
-  margin: 25px 0 0 5px;
-  justify-content: space-between;
-  gap: 43px;
-} */
+.dp-day-before {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  user-select: none;
+  color: #151229;
+
+  padding: 12.5px 17px;
+}
+
+.dp-day {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  user-select: none;
+
+  padding: 12.5px 17px;
+
+  color: #151229;
+}
+
+.dp-day:hover {
+  background: #F1F0FE;
+  cursor: pointer;
+}
+
+.dp-day-offset-before {
+  opacity: 0.2;
+}
+
+.dp-day-offset-after {
+  mix-blend-mode: normal;
+  opacity: 0.6;
+}
 </style>

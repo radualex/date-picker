@@ -2,7 +2,6 @@ import moment from "moment";
 
 export function getDates(month, year, gridSize) {
   const gridSizePlusOne = gridSize + 1;
-  console.log(gridSize);
   let daysOfCurrentMonth = getDaysOfMonth(month, year);
   const firstDay = daysOfCurrentMonth[0].momentDate;
   let currentMonthAndPreviousDaysArray = getDaysBefore(firstDay).concat(
@@ -17,7 +16,6 @@ export function getDates(month, year, gridSize) {
   let finalArr = currentMonthAndPreviousDaysArray.concat(
     getDaysAfterFrom(lastDay, restOfDaysAfter)
   );
-  console.log(finalArr);
   return finalArr;
 }
 
