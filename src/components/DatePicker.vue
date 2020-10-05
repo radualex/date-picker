@@ -17,7 +17,9 @@
               ? 'dp-day-before dp-day-offset-before'
               : 'dp-day',
             date.month === currentDate.month() + 2 ? 'dp-day-offset-after' : '',
+            date.active ? 'dp-date-active' : '',
           ]"
+          v-on:click="clickDate(date)"
           >{{ date.day }}</span
         >
       </div>
@@ -27,7 +29,14 @@
 
 <script>
 import moment from "moment";
-import { getDates } from "../utils/helpers";
+import {
+  getDates,
+  setActiveDate,
+  getFirstAndLastItems,
+  setActiveDateForRange,
+  getIndexOfDate,
+  resetActiveAllDates,
+} from "../utils/helpers";
 
 export default {
   name: "DatePicker",
@@ -39,11 +48,35 @@ export default {
       daysAbrvMap: ["S", "M", "T", "W", "T", "F", "S"],
       currentDate: moment(),
       dates: [],
+      rangeDates: [],
     };
   },
   methods: {
     filteredDatesByDayOfWeek(day) {
       return this.dates.filter((date) => date.dayOfWeek === day);
+    },
+    clickDate: function (date) {
+      setActiveDate(date, this.dates, !date.active);
+      if (this.rangeDates.length === 1) {
+        const indexSelectedDate = getIndexOfDate(date, this.dates);
+        const indexActiveDate = getIndexOfDate(this.rangeDates[0], this.dates);
+        if (indexSelectedDate > indexActiveDate) {
+          setActiveDateForRange(
+            indexActiveDate,
+            indexSelectedDate,
+            this.dates,
+            true
+          );
+        } else {
+          resetActiveAllDates(this.dates);
+          setActiveDate(date, this.dates, !date.active);
+        }
+      } else if (this.rangeDates.length === 2) {
+        resetActiveAllDates(this.dates);
+        setActiveDate(date, this.dates, !date.active);
+      }
+      this.rangeDates = getFirstAndLastItems(this.dates);
+      console.log(this.rangeDates);
     },
   },
   mounted: function () {
@@ -160,6 +193,10 @@ export default {
 .dp-day:hover {
   background: #F1F0FE;
   cursor: pointer;
+}
+
+.dp-date-active {
+  background: #F1F0FE;
 }
 
 .dp-day-offset-before {
