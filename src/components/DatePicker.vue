@@ -193,6 +193,8 @@ export default {
 .dp-day:hover {
   background: #F1F0FE;
   cursor: pointer;
+
+  opacity: 0.5;
 }
 
 .dp-date-active {
