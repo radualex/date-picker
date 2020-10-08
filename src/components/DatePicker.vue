@@ -1,9 +1,13 @@
 <template>
   <div class="container-dp">
     <div class="dp-header">
-      <i class="material-icons-outlined">arrow_back_ios</i>
+      <i class="material-icons-outlined" v-on:click="previousMonth()"
+        >arrow_back_ios</i
+      >
       <span class="dp-month">{{ currentDate.format("MMMM") }}</span>
-      <i class="material-icons-outlined">arrow_forward_ios</i>
+      <i class="material-icons-outlined" v-on:click="nextMonth()"
+        >arrow_forward_ios</i
+      >
     </div>
     <hr class="dp-separator" />
     <div class="dp-body" v-if="dates.length !== 0">
@@ -32,7 +36,6 @@ import moment from "moment";
 import {
   getDates,
   setActiveDate,
-  getFirstAndLastItems,
   setActiveDateForRange,
   getIndexOfDate,
   resetActiveAllDates,
@@ -48,19 +51,53 @@ export default {
       daysAbrvMap: ["S", "M", "T", "W", "T", "F", "S"],
       currentDate: moment(),
       dates: [],
-      rangeDates: [],
+      firstSelectedDate: null,
+      secondSelectedDate: null,
     };
   },
   methods: {
     filteredDatesByDayOfWeek(day) {
       return this.dates.filter((date) => date.dayOfWeek === day);
     },
+    previousMonth: function () {
+      this.currentDate = moment(this.currentDate).subtract(1, "month");
+      this.dates = getDates(
+        this.currentDate.month() + 1,
+        this.currentDate.year(),
+        this.columns * this.rows
+      );
+    },
+    nextMonth: function () {
+      this.currentDate = moment(this.currentDate).add(1, "month");
+      this.dates = getDates(
+        this.currentDate.month() + 1,
+        this.currentDate.year(),
+        this.columns * this.rows
+      );
+    },
     clickDate: function (date) {
-      setActiveDate(date, this.dates, !date.active);
-      if (this.rangeDates.length === 1) {
-        const indexSelectedDate = getIndexOfDate(date, this.dates);
-        const indexActiveDate = getIndexOfDate(this.rangeDates[0], this.dates);
-        if (indexSelectedDate > indexActiveDate) {
+      console.log(this.firstSelectedDate);
+      if (this.firstSelectedDate === null) {
+        setActiveDate(date, this.dates, !date.active);
+        this.firstSelectedDate = date;
+      } else {
+        if (this.secondSelectedDate !== null) {
+          resetActiveAllDates(this.dates);
+          setActiveDate(date, this.dates, !date.active);
+          this.firstSelectedDate = date;
+          this.secondSelectedDate = null;
+        } else if (
+          moment(this.firstSelectedDate.momentDate).isBefore(date.momentDate)
+        ) {
+          this.secondSelectedDate = date;
+          const indexSelectedDate = getIndexOfDate(
+            this.secondSelectedDate,
+            this.dates
+          );
+          const indexActiveDate = getIndexOfDate(
+            this.firstSelectedDate,
+            this.dates
+          );
           setActiveDateForRange(
             indexActiveDate,
             indexSelectedDate,
@@ -70,13 +107,9 @@ export default {
         } else {
           resetActiveAllDates(this.dates);
           setActiveDate(date, this.dates, !date.active);
+          this.firstSelectedDate = date;
         }
-      } else if (this.rangeDates.length === 2) {
-        resetActiveAllDates(this.dates);
-        setActiveDate(date, this.dates, !date.active);
       }
-      this.rangeDates = getFirstAndLastItems(this.dates);
-      console.log(this.rangeDates);
     },
   },
   mounted: function () {

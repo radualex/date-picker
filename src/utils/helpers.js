@@ -25,7 +25,7 @@ export function setActiveDate(date, dateArr, status) {
 }
 
 export function setActiveDateForRange(start, end, dateArr, status) {
-  for (let index = start; index < end; index++) {
+  for (let index = start; index <= end; index++) {
     dateArr[index].active = status;
   }
 }
@@ -40,15 +40,15 @@ export function getIndexOfDate(date, dateArr) {
   );
 }
 
-export function getFirstAndLastItems(dateArr) {
-  const activeDates = dateArr.filter((d) => d.active);
-  if (activeDates.length === 1) {
-    return [activeDates[0]];
-  } else {
-    const lastIndex = activeDates.length - 1;
-    return [activeDates[0], activeDates[lastIndex]];
-  }
-}
+// export function getFirstAndLastItems(dateArr) {
+//   const activeDates = dateArr.filter((d) => d.active);
+//   if (activeDates.length === 1) {
+//     return [activeDates[0]];
+//   } else {
+//     const lastIndex = activeDates.length - 1;
+//     return [activeDates[0], activeDates[lastIndex]];
+//   }
+// }
 
 export function resetActiveAllDates(dateArr) {
   for (let index = 0; index < dateArr.length; index++) {
