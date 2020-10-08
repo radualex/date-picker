@@ -23,22 +23,7 @@ export function getDates(
     getDaysAfterFrom(lastDay, restOfDaysAfter)
   );
 
-  if (firstSelectedDate !== null && secondSelectedDate !== null) {
-    for (let index = 0; index < finalArr.length; index++) {
-      const currentMomentDate = moment(finalArr[index].momentDate);
-      if (
-        currentMomentDate.isSameOrAfter(firstSelectedDate.momentDate) &&
-        currentMomentDate.isSameOrBefore(secondSelectedDate.momentDate)
-      ) {
-        finalArr[index].active = true;
-      }
-    }
-  } else if (firstSelectedDate !== null && secondSelectedDate === null) {
-    const index = getIndexOfDate(firstSelectedDate, finalArr);
-    if (index !== -1) {
-      finalArr[index].active = true;
-    }
-  }
+  checkIfDatesAreInsideRange(firstSelectedDate, secondSelectedDate, finalArr);
   return finalArr;
 }
 
@@ -130,4 +115,28 @@ function getDaysAfterFrom(momentDate, howMany) {
     });
   }
   return ar;
+}
+
+function checkIfDatesAreInsideRange(
+  firstSelectedDate,
+  secondSelectedDate,
+  finalArr
+) {
+  const bothAreNull = firstSelectedDate !== null && secondSelectedDate !== null;
+  if (bothAreNull) {
+    for (let index = 0; index < finalArr.length; index++) {
+      const currentMomentDate = moment(finalArr[index].momentDate);
+      if (
+        currentMomentDate.isSameOrAfter(firstSelectedDate.momentDate) &&
+        currentMomentDate.isSameOrBefore(secondSelectedDate.momentDate)
+      ) {
+        finalArr[index].active = true;
+      }
+    }
+  } else if (firstSelectedDate !== null && secondSelectedDate === null) {
+    const index = getIndexOfDate(firstSelectedDate, finalArr);
+    if (index !== -1) {
+      finalArr[index].active = true;
+    }
+  }
 }
