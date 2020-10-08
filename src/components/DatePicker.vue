@@ -64,7 +64,9 @@ export default {
       this.dates = getDates(
         this.currentDate.month() + 1,
         this.currentDate.year(),
-        this.columns * this.rows
+        this.columns * this.rows,
+        this.firstSelectedDate,
+        this.secondSelectedDate
       );
     },
     nextMonth: function () {
@@ -72,11 +74,12 @@ export default {
       this.dates = getDates(
         this.currentDate.month() + 1,
         this.currentDate.year(),
-        this.columns * this.rows
+        this.columns * this.rows,
+        this.firstSelectedDate,
+        this.secondSelectedDate
       );
     },
     clickDate: function (date) {
-      console.log(this.firstSelectedDate);
       if (this.firstSelectedDate === null) {
         setActiveDate(date, this.dates, !date.active);
         this.firstSelectedDate = date;
@@ -94,10 +97,14 @@ export default {
             this.secondSelectedDate,
             this.dates
           );
-          const indexActiveDate = getIndexOfDate(
+          let indexActiveDate = getIndexOfDate(
             this.firstSelectedDate,
             this.dates
           );
+          if (indexActiveDate === -1) {
+            indexActiveDate = 0;
+          }
+
           setActiveDateForRange(
             indexActiveDate,
             indexSelectedDate,
@@ -116,7 +123,9 @@ export default {
     this.dates = getDates(
       this.currentDate.month() + 1,
       this.currentDate.year(),
-      this.columns * this.rows
+      this.columns * this.rows,
+      this.firstSelectedDate,
+      this.secondSelectedDate
     );
   },
 };

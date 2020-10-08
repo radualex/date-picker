@@ -1,6 +1,12 @@
 import moment from "moment";
 
-export function getDates(month, year, gridSize) {
+export function getDates(
+  month,
+  year,
+  gridSize,
+  firstSelectedDate,
+  secondSelectedDate
+) {
   const gridSizePlusOne = gridSize + 1;
   let daysOfCurrentMonth = getDaysOfMonth(month, year);
   const firstDay = daysOfCurrentMonth[0].momentDate;
@@ -16,6 +22,23 @@ export function getDates(month, year, gridSize) {
   let finalArr = currentMonthAndPreviousDaysArray.concat(
     getDaysAfterFrom(lastDay, restOfDaysAfter)
   );
+
+  if (firstSelectedDate !== null && secondSelectedDate !== null) {
+    for (let index = 0; index < finalArr.length; index++) {
+      const currentMomentDate = moment(finalArr[index].momentDate);
+      if (
+        currentMomentDate.isSameOrAfter(firstSelectedDate.momentDate) &&
+        currentMomentDate.isSameOrBefore(secondSelectedDate.momentDate)
+      ) {
+        finalArr[index].active = true;
+      }
+    }
+  } else if (firstSelectedDate !== null && secondSelectedDate === null) {
+    const index = getIndexOfDate(firstSelectedDate, finalArr);
+    if (index !== -1) {
+      finalArr[index].active = true;
+    }
+  }
   return finalArr;
 }
 
@@ -39,16 +62,6 @@ export function getIndexOfDate(date, dateArr) {
       d.year === date.year
   );
 }
-
-// export function getFirstAndLastItems(dateArr) {
-//   const activeDates = dateArr.filter((d) => d.active);
-//   if (activeDates.length === 1) {
-//     return [activeDates[0]];
-//   } else {
-//     const lastIndex = activeDates.length - 1;
-//     return [activeDates[0], activeDates[lastIndex]];
-//   }
-// }
 
 export function resetActiveAllDates(dateArr) {
   for (let index = 0; index < dateArr.length; index++) {
