@@ -18,7 +18,7 @@
           :key="`dp-date-item-${index}`"
           v-bind:class="[
             date.month === currentDate.month()
-              ? 'dp-day-before dp-day-offset-before'
+              ? 'dp-day dp-day-offset-before'
               : 'dp-day',
             date.month === currentDate.month() + 2 ? 'dp-day-offset-after' : '',
             date.active ? 'dp-date-active' : '',
@@ -43,7 +43,6 @@ import {
 
 export default {
   name: "DatePicker",
-  props: {},
   data() {
     return {
       columns: 7,
@@ -117,6 +116,8 @@ export default {
           this.firstSelectedDate = date;
         }
       }
+      this.$emit("first-date", this.firstSelectedDate);
+      this.$emit("second-date", this.secondSelectedDate);
     },
   },
   mounted: function () {
@@ -207,17 +208,6 @@ export default {
 .container-dp .dp-body .dp-col {
   display: flex;
   flex-direction: column;
-}
-
-.dp-day-before {
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
-  text-align: center;
-  user-select: none;
-  color: #151229;
-
-  padding: 12.5px 17px;
 }
 
 .dp-day {

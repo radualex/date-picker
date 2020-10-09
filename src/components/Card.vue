@@ -1,21 +1,46 @@
 <template>
   <div class="container">
     <div class="header">
-      <span class="dates">Sep. 12, 2020 - Sep. 19, 2020 </span>
+      <span class="dates">{{ datesText }}</span>
       <i class="material-icons-outlined">view_agenda</i>
     </div>
-    <DatePicker />
+    <DatePicker
+      @first-date="handleFirstDatePicked($event)"
+      @second-date="handleSecondDatePicked($event)"
+    />
   </div>
 </template>
 
 <script>
+import moment from "moment";
 import DatePicker from "./DatePicker";
 
 export default {
   name: "Card",
   props: {},
+  data() {
+    return {
+      datesText: "",
+    };
+  },
   components: {
     DatePicker,
+  },
+  methods: {
+    handleFirstDatePicked(firstDate) {
+      if (!firstDate) {
+        return;
+      }
+      const toString = moment(firstDate.momentDate).format("MMM. DD, YYYY");
+      this.datesText = `${toString}`;
+    },
+    handleSecondDatePicked(secondDate) {
+      if (!secondDate) {
+        return;
+      }
+      const toString = moment(secondDate.momentDate).format("MMM. DD, YYYY");
+      this.datesText = `${this.datesText} - ${toString}`;
+    },
   },
 };
 </script>
@@ -31,6 +56,8 @@ export default {
 .container .header {
   display: flex;
   align-items: center;
+  width: 420px;
+  justify-content: space-between;
   background: #FFFFFF;
   border-radius: 10px;
   padding: 12px 13px 12px 35px;

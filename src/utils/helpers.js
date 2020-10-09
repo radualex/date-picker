@@ -8,22 +8,14 @@ export function getDates(
   secondSelectedDate
 ) {
   const gridSizePlusOne = gridSize + 1;
-  let daysOfCurrentMonth = getDaysOfMonth(month, year);
-  const firstDay = daysOfCurrentMonth[0].momentDate;
-  let currentMonthAndPreviousDaysArray = getDaysBefore(firstDay).concat(
-    daysOfCurrentMonth
-  );
-  const lastDay =
-    currentMonthAndPreviousDaysArray[
-      currentMonthAndPreviousDaysArray.length - 1
-    ].momentDate;
-  const restOfDaysAfter =
-    gridSizePlusOne - currentMonthAndPreviousDaysArray.length;
-  let finalArr = currentMonthAndPreviousDaysArray.concat(
-    getDaysAfterFrom(lastDay, restOfDaysAfter)
-  );
+  let finalArr = getDaysOfMonth(month, year);
+  const firstDay = finalArr[0].momentDate;
+  finalArr = [...getDaysBefore(firstDay), ...finalArr];
+  const lastDay = finalArr[finalArr.length - 1].momentDate;
+  const restOfDaysAfter = gridSizePlusOne - finalArr.length;
+  finalArr = [...finalArr, ...getDaysAfterFrom(lastDay, restOfDaysAfter)];
 
-  checkIfDatesAreInsideRange(firstSelectedDate, secondSelectedDate, finalArr);
+  setActiveForDates(firstSelectedDate, secondSelectedDate, finalArr);
   return finalArr;
 }
 
@@ -62,7 +54,6 @@ function getDaysOfMonth(month, year) {
     start.isBefore(end);
     start.add(1, "day")
   ) {
-    // TODO: extract model
     ar.push({
       day: start.date(),
       dayOfWeek: start.day(),
@@ -117,26 +108,40 @@ function getDaysAfterFrom(momentDate, howMany) {
   return ar;
 }
 
-function checkIfDatesAreInsideRange(
+function setActiveForDates(firstSelectedDate, secondSelectedDate, finalArr) {
+  const bothAreNull = firstSelectedDate !== null && secondSelectedDate !== null;
+  const onlySecondSelectedDateIsNull =
+    firstSelectedDate !== null && secondSelectedDate === null;
+  if (bothAreNull) {
+    setActiveForAllDatesWithinRange(
+      firstSelectedDate,
+      secondSelectedDate,
+      finalArr
+    );
+  } else if (onlySecondSelectedDateIsNull) {
+    setActiveForFirstSelectedDate(firstSelectedDate, finalArr);
+  }
+}
+
+function setActiveForAllDatesWithinRange(
   firstSelectedDate,
   secondSelectedDate,
   finalArr
 ) {
-  const bothAreNull = firstSelectedDate !== null && secondSelectedDate !== null;
-  if (bothAreNull) {
-    for (let index = 0; index < finalArr.length; index++) {
-      const currentMomentDate = moment(finalArr[index].momentDate);
-      if (
-        currentMomentDate.isSameOrAfter(firstSelectedDate.momentDate) &&
-        currentMomentDate.isSameOrBefore(secondSelectedDate.momentDate)
-      ) {
-        finalArr[index].active = true;
-      }
-    }
-  } else if (firstSelectedDate !== null && secondSelectedDate === null) {
-    const index = getIndexOfDate(firstSelectedDate, finalArr);
-    if (index !== -1) {
+  for (let index = 0; index < finalArr.length; index++) {
+    const currentMomentDate = moment(finalArr[index].momentDate);
+    if (
+      currentMomentDate.isSameOrAfter(firstSelectedDate.momentDate) &&
+      currentMomentDate.isSameOrBefore(secondSelectedDate.momentDate)
+    ) {
       finalArr[index].active = true;
     }
+  }
+}
+
+function setActiveForFirstSelectedDate(firstSelectedDate, finalArr) {
+  const index = getIndexOfDate(firstSelectedDate, finalArr);
+  if (index !== -1) {
+    finalArr[index].active = true;
   }
 }
