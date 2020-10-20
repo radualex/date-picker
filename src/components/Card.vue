@@ -13,7 +13,7 @@
 
 <script>
 import moment from "moment";
-import DatePicker from "./DatePicker";
+import DatePicker from "date-picker-vue3";
 
 export default {
   name: "Card",
@@ -58,7 +58,7 @@ export default {
   align-items: center;
   width: 420px;
   justify-content: space-between;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 10px;
   padding: 12px 13px 12px 35px;
   margin: 0 0 5px 0;
@@ -75,9 +75,9 @@ export default {
 .container .header i {
   font-size: 34px;
   padding: 16px;
-  background: #F1F0FE;
+  background: #f1f0fe;
   border-radius: 5px;
-  color: #6362DB;
+  color: #6362db;
   user-select: none;
 }
 
